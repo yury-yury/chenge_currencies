@@ -1,16 +1,15 @@
 from __future__ import absolute_import, unicode_literals
 import os
-import celery
+from celery import Celery
 
-
-# Установка переменной окружения для настроек проекта
+# Setting an environment variable for project settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'change_currencies.settings')
 
-# Создание экземпляра объекта Celery
-app = celery.Celery('config')
+# Instantiating a Celery Object
+app = Celery('change_currencies')
 
-# Загрузка настроек из файла Django
+# Loading settings from a Django file
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
-# Автоматическое обнаружение и регистрация задач из файлов tasks.py в приложениях Django
+# Automatically detect and register tasks from tasks.py files in Django applications
 app.autodiscover_tasks()

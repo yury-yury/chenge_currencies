@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "6e022802-8355-4c3c-900a-4bdc76c30d2c",
+		"name": "Change Currencies",
+		"description": "A collection of requests to the service API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24610581",
+		"_collection_link": "https://speeding-crater-669833.postman.co/workspace/e6f6425b-9060-44d7-8415-8e00acf1dfaa/collection/24610581-6e022802-8355-4c3c-900a-4bdc76c30d2c?action=share&source=collection_link&creator=24610581"
+	},
+	"item": [
+		{
+			"name": "127.0.0.1:8000/api/rates?from=EUR&to=RUB&value=1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8000/api/rates?from=EUR&to=RUB&value=1",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"rates"
+					],
+					"query": [
+						{
+							"key": "from",
+							"value": "EUR"
+						},
+						{
+							"key": "to",
+							"value": "RUB"
+						},
+						{
+							"key": "value",
+							"value": "1"
+						}
+					]
+				},
+				"description": "An example of a correct request to the service API."
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:8000/api/rates?value=1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8000/api/rates?value=1",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"rates"
+					],
+					"query": [
+						{
+							"key": "value",
+							"value": "1"
+						}
+					]
+				},
+				"description": "An example of a request to the service API in the absence of indications of the name of the currencies."
+			},
+			"response": []
+		},
+		{
+			"name": "127.0.0.1:8000/api/rates?to=RUB&value=1",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1:8000/api/rates?to=RUB&value=1",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"rates"
+					],
+					"query": [
+						{
+							"key": "to",
+							"value": "RUB"
+						},
+						{
+							"key": "value",
+							"value": "1"
+						}
+					]
+				},
+				"description": "An example of a request to the service API without specifying the name of the source currency."
+			},
+			"response": []
+		}
+	]
+}

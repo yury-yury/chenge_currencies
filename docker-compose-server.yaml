@@ -1,0 +1,91 @@
+---
+version: "3.9"
+
+services:
+
+  api:
+    image:
+      yuryyury/change_currencies:version-1
+
+    container_name: api
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - /home/yury/change_currencies/.env:/change_currencies/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+
+  migrations:
+    image:
+      yuryyury/change_currencies:version-1
+
+    container_name: migrations
+    volumes:
+     - /home/yury/change_currencies/.env:/change_currencies/.env
+    command: python manage.py migrate
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+      image: postgres:15.0-alpine
+
+      environment:
+        POSTGRES_DB: ${DB_NAME}
+        POSTGRES_USER: ${DB_USER}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+      restart: always
+      container_name: postgres
+      volumes:
+        - /home/yury/change_currencies/.env:/change_currencies/.env
+      healthcheck:
+        test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+        interval: 5s
+        timeout: 5s
+        retries: 15
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./data/cache:/data
+
+  celery:
+    container_name: celery
+    image:
+      yuryyury/change_currencies:version-1
+    command: >
+      bash -c "celery -A change_currencies.celery worker --loglevel=info"
+    volumes:
+      - .:/app
+      - /home/yury/change_currencies/.env:/change_currencies/.env
+    links:
+      - redis
+    depends_on:
+      - postgres
+      - api
+
+  celery-beat:
+    container_name: celery-beat
+    image:
+      yuryyury/change_currencies:version-1
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    command: >
+      bash -c "sleep 30 && celery -A change_currencies.celery beat --loglevel=info"
+    volumes:
+      - /home/yury/change_currencies/.env:/change_currencies/.env
+      - .:/app
+    depends_on:
+      - api
+      - celery
+
+...
